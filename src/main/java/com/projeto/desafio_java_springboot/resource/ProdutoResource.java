@@ -38,7 +38,7 @@ public class ProdutoResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
     public ResponseEntity readSearch(@RequestParam Double min_price, @RequestParam Double max_price, @RequestParam String q) {
         return new ResponseEntity<>(Arrays.asList(new Produto()), HttpStatus.OK);
     }
