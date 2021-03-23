@@ -6,7 +6,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProdutoInsertDTO{
+
     private String name;
     private String description;
     private Double price;
+
+    public String validate() {
+        if(name == null || description == null || price == null)
+            return "Os campos nome, description ou price não podem ser nulos";
+        else if (price < 0)
+            return "O campo price deve ser positivo";
+        return null;
+    }
+
 }

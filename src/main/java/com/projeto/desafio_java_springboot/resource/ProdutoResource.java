@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/products")
@@ -17,12 +15,12 @@ public class ProdutoResource {
     private ProdutoService produtoService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity insert(@Valid @RequestBody ProdutoInsertDTO produtoInsertDTO) {
+    public ResponseEntity insert(@RequestBody ProdutoInsertDTO produtoInsertDTO) {
         return produtoService.insert(produtoInsertDTO);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public ResponseEntity update(@Valid @RequestBody ProdutoInsertDTO produtoInsertDTO, @PathVariable String id) {
+    public ResponseEntity update(@RequestBody ProdutoInsertDTO produtoInsertDTO, @PathVariable String id) {
         return produtoService.update(produtoInsertDTO, id);
     }
 
@@ -42,7 +40,9 @@ public class ProdutoResource {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
-    public ResponseEntity readSearch(@RequestParam(required = false) Double min_price, @RequestParam(required = false) Double max_price, @RequestParam(required = false) String q) {
+    public ResponseEntity readSearch(@RequestParam(required = false) Double min_price,
+                                     @RequestParam(required = false) Double max_price,
+                                     @RequestParam(required = false) String q) {
         return produtoService.readSearch(min_price, max_price, q);
     }
 }

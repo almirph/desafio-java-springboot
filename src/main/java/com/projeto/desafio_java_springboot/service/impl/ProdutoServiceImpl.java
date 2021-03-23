@@ -1,5 +1,6 @@
 package com.projeto.desafio_java_springboot.service.impl;
 
+import com.projeto.desafio_java_springboot.domain.ErrorMessage;
 import com.projeto.desafio_java_springboot.domain.Produto;
 import com.projeto.desafio_java_springboot.dto.ProdutoInsertDTO;
 import com.projeto.desafio_java_springboot.repository.ProdutoRepository;
@@ -23,6 +24,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ResponseEntity insert(ProdutoInsertDTO produtoInsertDTO) {
+        if (produtoInsertDTO.validate() != null)
+            return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+                    produtoInsertDTO.validate()), HttpStatus.BAD_REQUEST);
         Produto produto = modelMapper.map(produtoInsertDTO, Produto.class);
         Produto produtoInserido = produtoRepository.save(produto);
         return new ResponseEntity<>(produtoInserido, HttpStatus.CREATED);
@@ -30,13 +34,20 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ResponseEntity update(ProdutoInsertDTO produtoInsertDTO, String id) {
+        if (produtoInsertDTO.validate() != null)
+            return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+                    produtoInsertDTO.validate()), HttpStatus.BAD_REQUEST);
+
         Optional<Produto> productById = produtoRepository.findById(id);
+
         if (productById.isPresent()) {
             Produto newProduct = modelMapper.map(produtoInsertDTO, Produto.class);
             newProduct.setId(id);
+            produtoRepository.save(newProduct);
             return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.value(),
+                    "O produto " + id + " não foi encontrado."), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -46,7 +57,8 @@ public class ProdutoServiceImpl implements ProdutoService {
         if (productById.isPresent()) {
             return new ResponseEntity<>(productById, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.value(),
+                    "O produto " + id + " não foi encontrado."), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -62,7 +74,8 @@ public class ProdutoServiceImpl implements ProdutoService {
             produtoRepository.delete(productById.get());
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.value(),
+                    "O produto " + id + " não foi encontrado."), HttpStatus.NOT_FOUND);
         }
     }
 
