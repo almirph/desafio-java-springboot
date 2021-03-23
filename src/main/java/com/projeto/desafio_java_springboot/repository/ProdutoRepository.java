@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, String> {
 
-    @Query("SELECT p FROM Produto p WHERE p.price>=:min_price AND p.price<=:max_price AND (p.name LIKE :q OR p.description LIKE :q)")
+    @Query("SELECT p FROM Produto p WHERE (:min_price is null OR p.price>=:min_price) AND (:max_price is null OR p.price<=:max_price) AND (:q is null OR p.name LIKE %:q% OR p.description LIKE %:q%)")
     List<Produto> findAllByPriceNameDescription(@Param("min_price") Double min_price, @Param("max_price") Double max_price, @Param("q") String q);
 }

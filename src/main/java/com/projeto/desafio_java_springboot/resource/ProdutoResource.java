@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value="/products")
+@RequestMapping(value = "/products")
 public class ProdutoResource {
 
     @Autowired
@@ -42,7 +42,7 @@ public class ProdutoResource {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
-    public ResponseEntity readSearch(@RequestParam Double min_price, @RequestParam Double max_price, @RequestParam String q) {
+    public ResponseEntity readSearch(@RequestParam(required = false) Double min_price, @RequestParam(required = false) Double max_price, @RequestParam(required = false) String q) {
         return produtoService.readSearch(min_price, max_price, q);
     }
 }
