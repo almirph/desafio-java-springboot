@@ -1,10 +1,10 @@
 package com.projeto.desafio_java_springboot.service.impl;
 
 import com.projeto.desafio_java_springboot.domain.ErrorMessage;
-import com.projeto.desafio_java_springboot.domain.Produto;
-import com.projeto.desafio_java_springboot.dto.ProdutoInsertDTO;
-import com.projeto.desafio_java_springboot.repository.ProdutoRepository;
-import com.projeto.desafio_java_springboot.service.ProdutoService;
+import com.projeto.desafio_java_springboot.domain.Product;
+import com.projeto.desafio_java_springboot.dto.ProductInsertDTO;
+import com.projeto.desafio_java_springboot.repository.ProductRepository;
+import com.projeto.desafio_java_springboot.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,35 +15,36 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProdutoServiceImpl implements ProdutoService {
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProdutoRepository produtoRepository;
+    private ProductRepository productRepository;
 
     private ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public ResponseEntity insert(ProdutoInsertDTO produtoInsertDTO) {
-        if (produtoInsertDTO.validate() != null)
+    public ResponseEntity insert(ProductInsertDTO productInsertDTO) {
+        if (productInsertDTO.validate() != null)
             return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
-                    produtoInsertDTO.validate()), HttpStatus.BAD_REQUEST);
-        Produto produto = modelMapper.map(produtoInsertDTO, Produto.class);
-        Produto produtoInserido = produtoRepository.save(produto);
-        return new ResponseEntity<>(produtoInserido, HttpStatus.CREATED);
+                    productInsertDTO.validate()), HttpStatus.BAD_REQUEST);
+
+        Product product = modelMapper.map(productInsertDTO, Product.class);
+        Product productInserted = productRepository.save(product);
+        return new ResponseEntity<>(productInserted, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity update(ProdutoInsertDTO produtoInsertDTO, String id) {
-        if (produtoInsertDTO.validate() != null)
+    public ResponseEntity update(ProductInsertDTO productInsertDTO, String id) {
+        if (productInsertDTO.validate() != null)
             return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
-                    produtoInsertDTO.validate()), HttpStatus.BAD_REQUEST);
+                    productInsertDTO.validate()), HttpStatus.BAD_REQUEST);
 
-        Optional<Produto> productById = produtoRepository.findById(id);
+        Optional<Product> productById = productRepository.findById(id);
 
         if (productById.isPresent()) {
-            Produto newProduct = modelMapper.map(produtoInsertDTO, Produto.class);
+            Product newProduct = modelMapper.map(productInsertDTO, Product.class);
             newProduct.setId(id);
-            produtoRepository.save(newProduct);
+            productRepository.save(newProduct);
             return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.value(),
@@ -53,7 +54,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ResponseEntity read(String id) {
-        Optional<Produto> productById = produtoRepository.findById(id);
+        Optional<Product> productById = productRepository.findById(id);
+
         if (productById.isPresent()) {
             return new ResponseEntity<>(productById, HttpStatus.OK);
         } else {
@@ -64,14 +66,15 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ResponseEntity readAll() {
-        return new ResponseEntity<>(produtoRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(productRepository.findAll(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity delete(String id) {
-        Optional<Produto> productById = produtoRepository.findById(id);
+        Optional<Product> productById = productRepository.findById(id);
+
         if (productById.isPresent()) {
-            produtoRepository.delete(productById.get());
+            productRepository.delete(productById.get());
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.value(),
@@ -81,7 +84,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ResponseEntity readSearch(Double min_price, Double max_price, String q) {
-        List<Produto> products = produtoRepository.findAllByPriceNameDescription(min_price, max_price, q);
+        List<Product> products = productRepository.findAllByPriceNameDescription(min_price, max_price, q);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

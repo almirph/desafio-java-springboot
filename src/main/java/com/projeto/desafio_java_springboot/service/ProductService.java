@@ -1,12 +1,12 @@
 package com.projeto.desafio_java_springboot.service;
 
-import com.projeto.desafio_java_springboot.dto.ProdutoInsertDTO;
+import com.projeto.desafio_java_springboot.dto.ProductInsertDTO;
 import org.springframework.http.ResponseEntity;
 
-public interface ProdutoService {
-    ResponseEntity insert(ProdutoInsertDTO produtoInsertDTO);
+public interface ProductService {
+    ResponseEntity insert(ProductInsertDTO productInsertDTO);
 
-    ResponseEntity update(ProdutoInsertDTO produtoInsertDTO, String id);
+    ResponseEntity update(ProductInsertDTO productInsertDTO, String id);
 
     ResponseEntity read(String id);
 
